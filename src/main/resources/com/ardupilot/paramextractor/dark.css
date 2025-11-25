@@ -55,3 +55,45 @@
     -fx-stroke-width: 1px;
     -fx-stroke-dash-array: null; /* Optional: make dashed */
 }
+
+/* ListView - Disable selection highlighting */
+.list-view {
+    -fx-selection-bar: transparent;
+    -fx-selection-bar-non-focused: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.list-view:focused {
+    -fx-background-color: transparent;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-cell-size: 30px;
+}
+
+.list-cell:filled {
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: transparent;
+    -fx-text-fill: lightgray;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled:selected:focused {
+    -fx-background-color: transparent;
+}
+
+.list-cell:even {
+    -fx-background-color: transparent;
+}
+
+.list-cell:odd {
+    -fx-background-color: transparent;
+}

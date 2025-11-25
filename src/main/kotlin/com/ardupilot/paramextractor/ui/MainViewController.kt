@@ -26,8 +26,10 @@ class MainViewController : Initializable {
     @FXML private lateinit var openFileButton: Button
     @FXML private lateinit var searchField: TextField
     @FXML private lateinit var exportButton: Button
+    @FXML private lateinit var leftPaneLabel: Label
     @FXML private lateinit var leftListView: ListView<Parameter>
     @FXML private lateinit var categoryPane: VBox
+    @FXML private lateinit var rightPaneLabel: Label
     @FXML private lateinit var rightListView: ListView<Parameter>
 
     private val parameterParser = ParameterParser()
@@ -51,6 +53,14 @@ class MainViewController : Initializable {
     }
 
     private fun setupListViews() {
+        // Completely disable selection for both ListViews
+        leftListView.isFocusTraversable = false
+        rightListView.isFocusTraversable = false
+
+        // Disable selection model
+        leftListView.selectionModel = null
+        rightListView.selectionModel = null
+
         // Set cell factory for left list (with checkboxes)
         leftListView.setCellFactory {
             ParameterCell(
@@ -67,14 +77,6 @@ class MainViewController : Initializable {
                 showCheckbox = false,
                 selectedParameters = selectedParameters
             )
-        }
-
-        // Remove selection model visuals
-        leftListView.selectionModel.selectedItemProperty().addListener { _, _, _ ->
-            leftListView.selectionModel.clearSelection()
-        }
-        rightListView.selectionModel.selectedItemProperty().addListener { _, _, _ ->
-            rightListView.selectionModel.clearSelection()
         }
     }
 
@@ -354,6 +356,9 @@ class MainViewController : Initializable {
         parameterRows.clear()
         listView.items.setAll(parameters)
 
+        // Update left pane count
+        leftPaneLabel.text = "Original Parameters (${leftListView.items.size})"
+
         // Force refresh to update checkbox states
         listView.refresh()
     }
@@ -369,6 +374,9 @@ class MainViewController : Initializable {
 
         val sorted = filteredBySearch.sortedBy { it.name }
         rightListView.items.setAll(sorted)
+
+        // Update right pane count
+        rightPaneLabel.text = "Filtered Parameters (${rightListView.items.size})"
     }
 
     private fun showError(title: String, message: String) {

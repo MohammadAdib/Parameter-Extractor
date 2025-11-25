@@ -9,6 +9,11 @@ class ParameterCell(
     private val selectedParameters: Set<Parameter>
 ) : ListCell<Parameter>() {
 
+    init {
+        // Prevent cell from being selectable
+        isFocusTraversable = false
+    }
+
     override fun updateItem(item: Parameter?, empty: Boolean) {
         super.updateItem(item, empty)
 

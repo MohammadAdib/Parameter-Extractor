@@ -27,7 +27,7 @@
                 <Insets bottom="8.0" left="8.0" />
             </padding>
 
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Original Parameters" />
+            <Label fx:id="leftPaneLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Original Parameters (0)" />
 
             <ListView fx:id="leftListView" VBox.vgrow="ALWAYS" />
         </VBox>
@@ -63,7 +63,7 @@
                 <Insets bottom="8.0" right="8.0" />
             </padding>
 
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Filtered Parameters" />
+            <Label fx:id="rightPaneLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Filtered Parameters (0)" />
 
             <ListView fx:id="rightListView" VBox.vgrow="ALWAYS" />
         </VBox>
