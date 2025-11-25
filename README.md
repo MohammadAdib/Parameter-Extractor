@@ -2,8 +2,7 @@
 
 A JavaFX application built with Kotlin for filtering and extracting Ardupilot parameters by category.
 
-<img width="1827" height="1039" alt="image" src="https://github.com/user-attachments/assets/93ea8982-a59d-490a-bfdd-55c897e74a50" />
-
+<img width="1827" height="1039" alt="image" src="https://github.com/user-attachments/assets/08ae6a59-81ca-48c1-9429-3cbada7cb9e6" />
 
 ## Features
 
