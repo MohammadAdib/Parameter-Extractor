@@ -210,9 +210,10 @@ class MainViewController : Initializable {
         try {
             allParameters = parameterParser.parseParameterFile(file)
             selectedParameters.clear()
-            selectedParameters.addAll(allParameters) // Select all by default
             updateCategoryCheckboxes()
             updateAllDisplays()
+            // Scroll to top on left pane after loading new file
+            leftListView.scrollTo(0)
         } catch (e: Exception) {
             showError("Error loading file", "Failed to load parameter file: ${e.message}")
         }
@@ -297,7 +298,7 @@ class MainViewController : Initializable {
             .filter { it != ParameterCategory.OTHER && it in existingCategories }
             .forEach { category ->
                 val checkBox = CheckBox(category.displayName).apply {
-                    isSelected = true
+                    isSelected = false
                     isIndeterminate = false
                     isAllowIndeterminate = true
                     setOnAction { onCategoryCheckboxChanged(category, this) }
@@ -311,7 +312,7 @@ class MainViewController : Initializable {
 
         if (ParameterCategory.OTHER in existingCategories) {
             val otherCheckBox = CheckBox(ParameterCategory.OTHER.displayName).apply {
-                isSelected = true
+                isSelected = false
                 isIndeterminate = false
                 isAllowIndeterminate = true
                 setOnAction { onCategoryCheckboxChanged(ParameterCategory.OTHER, this) }

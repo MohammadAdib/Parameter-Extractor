@@ -42,8 +42,8 @@
 
             <VBox spacing="5">
                 <HBox spacing="5">
-                    <Button maxWidth="Infinity" onAction="#onSelectAll" text="Select All" HBox.hgrow="ALWAYS" />
-                    <Button maxWidth="Infinity" onAction="#onDeselectAll" text="Deselect All" HBox.hgrow="ALWAYS" />
+                    <Button maxWidth="Infinity" minWidth="-Infinity" onAction="#onSelectAll" prefWidth="0.0" text="Select All" HBox.hgrow="ALWAYS" />
+                    <Button maxWidth="Infinity" minWidth="-Infinity" onAction="#onDeselectAll" prefWidth="0.0" text="Deselect All" HBox.hgrow="ALWAYS" />
                 </HBox>
                 <Button fx:id="exportButton" maxWidth="Infinity" onAction="#onExport" text="Export" />
             </VBox>

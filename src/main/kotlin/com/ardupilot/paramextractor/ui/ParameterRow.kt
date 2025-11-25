@@ -24,7 +24,7 @@ class ParameterRow(
         // Checkbox for selection (fixed width) - only if showCheckbox is true
         if (showCheckbox) {
             checkBox.apply {
-                isSelected = true
+                isSelected = false
                 minWidth = 25.0
                 maxWidth = 25.0
                 setOnAction {
