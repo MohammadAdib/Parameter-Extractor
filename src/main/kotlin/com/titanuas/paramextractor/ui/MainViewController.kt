@@ -1,8 +1,8 @@
-package com.ardupilot.paramextractor.ui
+package com.titanuas.paramextractor.ui
 
-import com.ardupilot.paramextractor.model.Parameter
-import com.ardupilot.paramextractor.model.ParameterCategory
-import com.ardupilot.paramextractor.service.ParameterParser
+import com.titanuas.paramextractor.model.Parameter
+import com.titanuas.paramextractor.model.ParameterCategory
+import com.titanuas.paramextractor.service.ParameterParser
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.event.ActionEvent

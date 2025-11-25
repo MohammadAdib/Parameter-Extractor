@@ -1,4 +1,4 @@
-package com.ardupilot.paramextractor.model
+package com.titanuas.paramextractor.model
 
 import javafx.scene.paint.Color
 

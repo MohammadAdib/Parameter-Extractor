@@ -1,4 +1,4 @@
-package com.ardupilot.paramextractor.model
+package com.titanuas.paramextractor.model
 
 data class Parameter(
     val name: String,

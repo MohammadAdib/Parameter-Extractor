@@ -1,7 +1,7 @@
-package com.ardupilot.paramextractor.service
+package com.titanuas.paramextractor.service
 
-import com.ardupilot.paramextractor.model.Parameter
-import com.ardupilot.paramextractor.model.ParameterCategory
+import com.titanuas.paramextractor.model.Parameter
+import com.titanuas.paramextractor.model.ParameterCategory
 import java.io.File
 
 class ParameterParser {

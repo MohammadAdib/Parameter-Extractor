@@ -1,4 +1,4 @@
-module com.ardupilot {
+module com.titanuas {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.swing;
@@ -8,7 +8,7 @@ module com.ardupilot {
     requires java.prefs;
     requires jfxutils;
 
-    opens com.ardupilot.paramextractor to javafx.fxml, com.google.gson;
-    opens com.ardupilot.paramextractor.ui to javafx.fxml, com.google.gson;
-    exports com.ardupilot.paramextractor to javafx.graphics, javafx.base, javafx.controls;
+    opens com.titanuas.paramextractor to javafx.fxml, com.google.gson;
+    opens com.titanuas.paramextractor.ui to javafx.fxml, com.google.gson;
+    exports com.titanuas.paramextractor to javafx.graphics, javafx.base, javafx.controls;
 }

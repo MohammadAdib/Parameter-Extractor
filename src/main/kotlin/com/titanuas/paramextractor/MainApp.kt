@@ -1,6 +1,6 @@
-package com.ardupilot.paramextractor
+package com.titanuas.paramextractor
 
-import com.ardupilot.paramextractor.ui.MainViewController
+import com.titanuas.paramextractor.ui.MainViewController
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
@@ -13,7 +13,7 @@ class MainApp : Application() {
         primaryStage.title = "Ardupilot Parameter Extractor"
 
         // Load FXML
-        val fxmlLoader = FXMLLoader(javaClass.getResource("/com/ardupilot/paramextractor/MainView.fxml"))
+        val fxmlLoader = FXMLLoader(javaClass.getResource("/com/titanuas/paramextractor/MainView.fxml"))
         val root = fxmlLoader.load<Parent>()
 
         // Get controller and set stage reference
@@ -23,7 +23,7 @@ class MainApp : Application() {
         val scene = Scene(root, 1460.0, 800.0)
 
         // Load dark theme CSS
-        val cssResource = javaClass.getResource("/com/ardupilot/paramextractor/dark.css")
+        val cssResource = javaClass.getResource("/com/titanuas/paramextractor/dark.css")
         if (cssResource != null) {
             scene.stylesheets.add(cssResource.toExternalForm())
         }

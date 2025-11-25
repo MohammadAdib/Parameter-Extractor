@@ -1,6 +1,6 @@
-package com.ardupilot.paramextractor.ui
+package com.titanuas.paramextractor.ui
 
-import com.ardupilot.paramextractor.model.Parameter
+import com.titanuas.paramextractor.model.Parameter
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
