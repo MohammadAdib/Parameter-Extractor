@@ -17,8 +17,11 @@
             <padding>
                 <Insets left="10.0" right="10.0" top="10.0" />
             </padding>
-            <Label text="Search:" />
+            <Label fx:id="fileNameLabel" text="" />
             <TextField fx:id="searchField" promptText="Filter parameters..." HBox.hgrow="ALWAYS" />
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
         </HBox>
     </VBox>
     <HBox spacing="10" VBox.vgrow="ALWAYS">
@@ -56,7 +59,7 @@
                     <Button maxWidth="Infinity" onAction="#onSelectAll" text="Select All" HBox.hgrow="ALWAYS" />
                     <Button maxWidth="Infinity" onAction="#onDeselectAll" text="Deselect All" HBox.hgrow="ALWAYS" />
                 </HBox>
-                <Button maxWidth="Infinity" onAction="#onExport" text="Export" />
+                <Button fx:id="exportButton" maxWidth="Infinity" onAction="#onExport" text="Export" />
             </VBox>
 
             <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">

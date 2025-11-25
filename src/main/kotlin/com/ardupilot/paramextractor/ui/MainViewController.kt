@@ -23,7 +23,9 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 class MainViewController : Initializable {
+    @FXML private lateinit var fileNameLabel: Label
     @FXML private lateinit var searchField: TextField
+    @FXML private lateinit var exportButton: Button
     @FXML private lateinit var leftPane: VBox
     @FXML private lateinit var categoryPane: VBox
     @FXML private lateinit var rightPane: VBox
@@ -33,14 +35,18 @@ class MainViewController : Initializable {
     private val prefs = Preferences.userNodeForPackage(MainViewController::class.java)
     private var searchText = ""
     private var searchDebounceTask: CompletableFuture<Void>? = null
+    private var updateDebounceTask: CompletableFuture<Void>? = null
     private val categoryCheckBoxes = mutableMapOf<ParameterCategory, CheckBox>()
     private val parameterRows = mutableListOf<ParameterRow>()
     private val selectedParameters = mutableSetOf<Parameter>()
+    private var isUpdating = false
+    private var lastOpenedFileName: String = "parameters.param"
 
     var stage: Stage? = null
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         setupSearchListener()
+        updateExportButtonState()
     }
 
     private fun setupSearchListener() {
@@ -85,12 +91,15 @@ class MainViewController : Initializable {
         val file = fileChooser.showOpenDialog(stage)
         if (file != null) {
             prefs.put("lastDirectory", file.parent)
+            lastOpenedFileName = file.name
+            fileNameLabel.text = file.name
             loadParameters(file)
         }
     }
 
     @FXML
     private fun onSelectAll() {
+        isUpdating = true
         categoryCheckBoxes.values.forEach {
             it.isSelected = true
             it.isIndeterminate = false
@@ -99,11 +108,13 @@ class MainViewController : Initializable {
             it.checkBox.isSelected = true
             selectedParameters.add(it.parameter)
         }
-        updateFilteredParameters()
+        isUpdating = false
+        scheduleFilterUpdate()
     }
 
     @FXML
     private fun onDeselectAll() {
+        isUpdating = true
         categoryCheckBoxes.values.forEach {
             it.isSelected = false
             it.isIndeterminate = false
@@ -112,7 +123,8 @@ class MainViewController : Initializable {
             it.checkBox.isSelected = false
             selectedParameters.remove(it.parameter)
         }
-        updateFilteredParameters()
+        isUpdating = false
+        scheduleFilterUpdate()
     }
 
     @FXML
@@ -122,9 +134,14 @@ class MainViewController : Initializable {
             return
         }
 
+        // Generate filtered file name from original
+        val baseName = lastOpenedFileName.substringBeforeLast(".")
+        val extension = lastOpenedFileName.substringAfterLast(".", "param")
+        val filteredFileName = "${baseName}_filtered.${extension}"
+
         val fileChooser = FileChooser().apply {
             title = "Export Filtered Parameters"
-            initialFileName = "filtered_parameters.param"
+            initialFileName = filteredFileName
             extensionFilters.addAll(
                 FileChooser.ExtensionFilter("Parameter Files", "*.param"),
                 FileChooser.ExtensionFilter("Text Files", "*.txt"),
@@ -156,8 +173,6 @@ class MainViewController : Initializable {
 
                 val content = parameterParser.exportParameters(filteredBySearch.sortedBy { it.name })
                 file.writeText(content)
-
-                showInfo("Export Successful", "Filtered parameters exported successfully to:\n${file.absolutePath}")
             } catch (e: Exception) {
                 showError("Export Failed", "Failed to export parameters: ${e.message}")
             }
@@ -188,23 +203,29 @@ class MainViewController : Initializable {
 
         displayParameters(leftPane, filteredBySearch)
         updateFilteredParameters()
+        updateExportButtonState()
     }
 
     private fun onParameterSelectionChanged(parameter: Parameter, selected: Boolean) {
+        if (isUpdating) return
+
         if (selected) {
             selectedParameters.add(parameter)
         } else {
             selectedParameters.remove(parameter)
         }
         updateCategoryCheckboxState(parameter.category)
-        updateFilteredParameters()
+        scheduleFilterUpdate()
     }
 
     private fun updateCategoryCheckboxState(category: ParameterCategory) {
+        if (isUpdating) return
+
         val categoryCheckBox = categoryCheckBoxes[category] ?: return
         val categoryParams = allParameters.filter { it.category == category }
         val selectedCount = categoryParams.count { it in selectedParameters }
 
+        isUpdating = true
         when {
             selectedCount == 0 -> {
                 categoryCheckBox.isIndeterminate = false
@@ -218,6 +239,23 @@ class MainViewController : Initializable {
                 categoryCheckBox.isIndeterminate = true
             }
         }
+        isUpdating = false
+    }
+
+    private fun scheduleFilterUpdate() {
+        updateDebounceTask?.cancel(true)
+        updateDebounceTask = CompletableFuture.runAsync({
+            Thread.sleep(50)
+        }).thenRun {
+            javafx.application.Platform.runLater {
+                updateFilteredParameters()
+                updateExportButtonState()
+            }
+        }
+    }
+
+    private fun updateExportButtonState() {
+        exportButton.isDisable = selectedParameters.isEmpty()
     }
 
     private fun updateCategoryCheckboxes() {
@@ -258,6 +296,10 @@ class MainViewController : Initializable {
     }
 
     private fun onCategoryCheckboxChanged(category: ParameterCategory, checkBox: CheckBox) {
+        if (isUpdating) return
+
+        isUpdating = true
+
         if (checkBox.isIndeterminate) {
             checkBox.isIndeterminate = false
             checkBox.isSelected = true
@@ -278,7 +320,8 @@ class MainViewController : Initializable {
         parameterRows.filter { it.parameter.category == category }
             .forEach { it.checkBox.isSelected = shouldSelect }
 
-        updateFilteredParameters()
+        isUpdating = false
+        scheduleFilterUpdate()
     }
 
     private fun displayParameters(pane: VBox, parameters: List<Parameter>) {
@@ -299,8 +342,6 @@ class MainViewController : Initializable {
     }
 
     private fun updateFilteredParameters() {
-        rightPane.children.clear()
-
         val filteredBySearch = if (searchText.isEmpty()) {
             selectedParameters.toList()
         } else {
@@ -310,9 +351,14 @@ class MainViewController : Initializable {
             }
         }
 
-        filteredBySearch.sortedBy { it.name }.forEach { parameter ->
-            rightPane.children.add(ParameterRow(parameter, { _, _ -> }, showCheckbox = false))
+        val sorted = filteredBySearch.sortedBy { it.name }
+
+        // Clear and rebuild in batch
+        rightPane.children.clear()
+        val newRows = sorted.map { parameter ->
+            ParameterRow(parameter, { _, _ -> }, showCheckbox = false)
         }
+        rightPane.children.addAll(newRows)
     }
 
     private fun showError(title: String, message: String) {
